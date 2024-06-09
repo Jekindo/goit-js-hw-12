@@ -45,5 +45,5 @@ export default function renderGalleryItems(images) {
     )
     .join('');
 
-  refs.galleryContainer.innerHTML = markup;
+  refs.galleryContainer.insertAdjacentHTML('beforeend', markup);
 }

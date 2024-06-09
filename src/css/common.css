@@ -55,26 +55,6 @@ body {
   padding: 36px 0;
 }
 
-.button {
-  padding: 8px 16px;
-
-  font-weight: 500;
-  font-size: 16px;
-  line-height: 1.5;
-
-  color: #fff;
-  background-color: #4e75ff;
-  border: none;
-  border-radius: 8px;
-
-  transition: background-color 250ms ease-in-out;
-}
-
-.button:hover,
-.button:focus {
-  background: #6c8cff;
-}
-
 /* 
 * Loading
  */

@@ -24,9 +24,7 @@ const lightbox = new SimpleLightbox('.js-gallery a', {
 refs.searchForm.addEventListener('submit', onFormSubmit);
 loadMoreBtn.refs.button.addEventListener('click', onLoadMore);
 
-function onSearch(evt) {}
-
-function onFormSubmit(evt) {
+async function onFormSubmit(evt) {
   evt.preventDefault();
 
   const form = evt.currentTarget;
@@ -49,38 +47,39 @@ function onFormSubmit(evt) {
 
   refs.loading.classList.remove('hidden');
 
-  pixabayApiService
-    .fetchImages(searchQuery)
-    .then(({ hits: images, totalHits }) => {
-      if (images.length === 0) {
-        return iziToast.error({
-          position: 'topRight',
-          message:
-            'Sorry, there are no images matching your search query. Please try again!',
-        });
-      }
+  try {
+    const { hits: images, totalHits } = await pixabayApiService.fetchImages(
+      searchQuery
+    );
 
-      renderGalleryItems(images);
-      loadMoreBtn.show();
-
-      lightbox.refresh();
-    })
-    .catch(error => {
-      iziToast.error({
+    if (images.length === 0) {
+      return iziToast.error({
         position: 'topRight',
-        message: 'Sorry, something is wrong',
+        message:
+          'Sorry, there are no images matching your search query. Please try again!',
       });
-    })
-    .finally(() => {
-      form.reset();
-      refs.loading.classList.add('hidden');
+    }
+
+    renderGalleryItems(images);
+    loadMoreBtn.show();
+
+    lightbox.refresh();
+  } catch (error) {
+    iziToast.error({
+      position: 'topRight',
+      message: 'Sorry, something is wrong',
     });
+  } finally {
+    form.reset();
+    refs.loading.classList.add('hidden');
+  }
 }
 
-function onLoadMore() {
+async function onLoadMore() {
   loadMoreBtn.disable();
 
-  pixabayApiService.fetchImages().then(({ hits, totalHits }) => {
+  try {
+    const { hits, totalHits } = await pixabayApiService.fetchImages();
     const lastPage = Math.ceil(totalHits / pixabayApiService.perPage);
 
     if (pixabayApiService.page === lastPage) {
@@ -92,9 +91,15 @@ function onLoadMore() {
     }
 
     renderGalleryItems(hits);
-    loadMoreBtn.enable();
     smoothScroll();
-  });
+  } catch (error) {
+    iziToast.error({
+      position: 'topRight',
+      message: 'Sorry, something went wrong while loading more images.',
+    });
+  } finally {
+    loadMoreBtn.enable();
+  }
 }
 
 function smoothScroll() {

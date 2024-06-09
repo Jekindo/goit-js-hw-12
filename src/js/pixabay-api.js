@@ -9,7 +9,7 @@ export default class PixabayApiService {
     this.perPage = 15;
   }
 
-  fetchImages() {
+  async fetchImages() {
     const params = new URLSearchParams({
       key: '25232082-62f19a20a64b822fbbd43f9d6',
       q: this.searchQuery,
@@ -20,10 +20,16 @@ export default class PixabayApiService {
       safesearch: true,
     });
 
-    return axios.get(`?${params}`).then(response => {
+    try {
+      const response = await axios.get(`?${params}`);
+
       this.incrementPage();
+
       return response.data;
-    });
+    } catch (error) {
+      console.error('Error fetching images:', error);
+      throw error;
+    }
   }
 
   get query() {

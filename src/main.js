@@ -60,8 +60,13 @@ async function onFormSubmit(evt) {
       });
     }
 
+    if (images.length < pixabayApiService.perPage) {
+      loadMoreBtn.hide();
+    } else {
+      loadMoreBtn.show();
+    }
+
     renderGalleryItems(images);
-    loadMoreBtn.show();
 
     lightbox.refresh();
   } catch (error) {

@@ -1,4 +1,12 @@
-import getRefs from './getRefs';
+import getRefs from '../js/getRefs';
+
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
+
+const lightbox = new SimpleLightbox('.js-gallery a', {
+  captionsData: 'alt',
+  captionDelay: 250,
+});
 
 const refs = getRefs();
 
@@ -46,4 +54,6 @@ export default function renderGalleryItems(images) {
     .join('');
 
   refs.galleryContainer.insertAdjacentHTML('beforeend', markup);
+
+  lightbox.refresh();
 }

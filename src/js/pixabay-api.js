@@ -23,8 +23,6 @@ export default class PixabayApiService {
     try {
       const response = await axios.get(`?${params}`);
 
-      this.incrementPage();
-
       return response.data;
     } catch (error) {
       console.error('Error fetching images:', error);

@@ -7,18 +7,11 @@ import LoadMoreBtn from './js/load-more-btn';
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 
-import SimpleLightbox from 'simplelightbox';
-import 'simplelightbox/dist/simple-lightbox.min.css';
-
 const refs = getRefs();
 const pixabayApiService = new PixabayApiService();
 const loadMoreBtn = new LoadMoreBtn({
   selector: '[data-action="load-more"]',
   hidden: true,
-});
-const lightbox = new SimpleLightbox('.js-gallery a', {
-  captionsData: 'alt',
-  captionDelay: 250,
 });
 
 refs.searchForm.addEventListener('submit', onFormSubmit);
@@ -68,7 +61,7 @@ async function onFormSubmit(evt) {
 
     renderGalleryItems(images);
 
-    lightbox.refresh();
+    console.log('PixabayApiService.page', pixabayApiService.page);
   } catch (error) {
     iziToast.error({
       position: 'topRight',
@@ -86,6 +79,8 @@ async function onLoadMore() {
   try {
     const { hits, totalHits } = await pixabayApiService.fetchImages();
     const lastPage = Math.ceil(totalHits / pixabayApiService.perPage);
+
+    pixabayApiService.incrementPage();
 
     if (pixabayApiService.page === lastPage) {
       loadMoreBtn.hide();
